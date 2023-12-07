@@ -59,6 +59,7 @@ int tryEnableJIT(int argc, char **argv)
 
 __attribute__((constructor)) static void entry(int argc, char **argv) 
 {
+    NSLog(@"[*] TrollStoreJITEnabler loaded")
     int result = tryEnableJIT(argc, argv);
     if(result == 1)
         ShowAlert(@"Success", @"[+] JIT is enabled.");
