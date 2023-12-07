@@ -1,3 +1,5 @@
 .theos
+.theos/*
+*.dylib
 **/.DS_Store
 .vscode
