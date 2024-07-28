@@ -21,8 +21,7 @@ jobs:
       run: |
         git clone --recursive https://github.com/theos/theos.git $HOME/theos
         echo "export THEOS=$HOME/theos" >> $GITHUB_ENV
-        export THEOS=$HOME/theos
-        export THEOS_MAKE_PATH=$THEOS/makefiles
+        echo "export THEOS_MAKE_PATH=$HOME/theos/makefiles" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: |
@@ -33,10 +32,13 @@ jobs:
       env:
         THEOS: ${{ env.THEOS }}
         THEOS_MAKE_PATH: ${{ env.THEOS }}/makefiles
-      run: make
+      run: |
+        export THEOS=${{ env.THEOS }}
+        export THEOS_MAKE_PATH=${{ env.THEOS }}/makefiles
+        make
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: Build-Output
-        path: .theos/obj/TrollStoreJitEnabler.dylib
+        path: .theos/obj/**/*.dylib
