@@ -1,23 +1,41 @@
-name: C/C++ CI
+name: Build TrollStoreJitEnabler
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - main
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Theos
+      run: |
+        git clone --recursive https://github.com/theos/theos.git $HOME/theos
+        echo "export THEOS=$HOME/theos" >> $GITHUB_ENV
+        export THEOS=$HOME/theos
+        export THEOS_MAKE_PATH=$THEOS/makefiles
+
+    - name: Install dependencies
+      run: |
+        brew install llvm ldid
+        sudo gem install xcpretty
+
+    - name: Build project
+      env:
+        THEOS: ${{ env.THEOS }}
+        THEOS_MAKE_PATH: ${{ env.THEOS }}/makefiles
       run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Build-Output
+        path: .theos/obj/TrollStoreJitEnabler.dylib
