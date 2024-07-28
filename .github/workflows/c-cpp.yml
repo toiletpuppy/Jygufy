@@ -34,8 +34,8 @@ jobs:
         THEOS_MAKE_PATH: ${{ env.THEOS }}/makefiles
       run: |
         export THEOS=${{ env.THEOS }}
-        export THEOS_MAKE_PATH=${{ env.THEOS }}/makefiles
-        make
+        export THEOS_MAKE_PATH=${{ env.THEOS_MAKE_PATH }}
+        make THEOS=$THEOS THEOS_MAKE_PATH=$THEOS_MAKE_PATH
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
